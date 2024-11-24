@@ -233,7 +233,75 @@ func TestCalculator_RulePointPerTwoItems(t *testing.T) {
 }
 
 func TestCalculator_RuleItemDescriptionMultipleOf3(t *testing.T) {
-	t.Skip("TBD; will come back to this one")
+	// Arrange
+	cases := []testCase{
+		{
+			Receipt: models.Receipt{
+				Retailer: "1",
+				Items: []models.Item{
+					{
+						ShortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
+						Price:            12.00,
+					},
+				},
+			},
+			Expected: 3,
+		},
+		{
+			Receipt: models.Receipt{
+				Retailer: "2",
+				Items: []models.Item{
+					{
+						ShortDescription: "Diet Dr. Pepper 2 Liters",
+						Price:            2.35,
+					},
+				},
+			},
+			Expected: 1,
+		},
+		{
+			Receipt: models.Receipt{
+				Retailer: "2",
+				Items: []models.Item{
+					{
+						ShortDescription: "Dr. Pepper 2 Liters",
+						Price:            2.35,
+					},
+				},
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				Retailer: "2",
+				Items: []models.Item{
+					{
+						ShortDescription: "Diet Dr. Pepper 2 Liters",
+						Price:            2.35,
+					},
+					{
+						ShortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
+						Price:            12.00,
+					},
+					{
+						ShortDescription: "Dr. Pepper 2 Liters",
+						Price:            2.35,
+					},
+				},
+			},
+			Expected: 4,
+		},
+	}
+
+	for _, c := range cases {
+		calc := Calculator{}
+
+		// Act
+		result := calc.ruleItemDescriptionMultipleOf3(c.Receipt)
+
+		// Assert
+		require.Equalf(t, c.Expected, result, "Receipt from retailer \"%s\"", c.Receipt.Retailer)
+	}
 }
 
 func TestCalculator_RuleOddDay(t *testing.T) {

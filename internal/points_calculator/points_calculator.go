@@ -2,6 +2,7 @@ package points_calculator
 
 import (
 	"math"
+	"strings"
 	"time"
 
 	"github.com/kaiiorg/receipt-processor/internal/models"
@@ -74,7 +75,28 @@ func (c *Calculator) rulePointPerTwoItems(receipt models.Receipt) uint64 {
 // If it is, the points returned is the price of the item is multiplied by 0.2 and rounded up to the nearest integer
 // Example: "Diet Dr. Pepper 2 Liters" @ $2.35 = 1 point,
 func (c *Calculator) ruleItemDescriptionMultipleOf3(receipt models.Receipt) uint64 {
-	return 0
+	total := uint64(0)
+
+	for _, item := range receipt.Items {
+		// Skip if the trimmed length of the description is not divisible by 3
+		if len(strings.TrimSpace(item.ShortDescription))%3 != 0 {
+			continue
+		}
+
+		initialPoints := item.Price * 0.2
+
+		// math.Trunc returns the integer portion of the float: 2.4 -> 2; 2 -> 2
+		intPoints := math.Trunc(initialPoints)
+		// If the intPoints and initialPoints values are not the same, that means we have a decimal value and we
+		// need to add one to round up to the next integer
+		if intPoints != initialPoints {
+			intPoints++
+		}
+
+		total += uint64(intPoints)
+	}
+
+	return total
 }
 
 // ruleOddDay returns 6 points if the purchase day in the month is an odd number
