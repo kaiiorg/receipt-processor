@@ -52,6 +52,13 @@ func (c *Calculator) ruleRoundTotal(receipt models.Receipt) uint64 {
 // ruleTotalMultipleOfQuarter returns 25 points if the total is a multiple of $0.25 (1 quarter)
 // Example: $7.00 = 25 points, $37.50 = 25 points, $1.23 = 0 points
 func (c *Calculator) ruleTotalMultipleOfQuarter(receipt models.Receipt) uint64 {
+	// Note: carefully ignoring floating point rounding issues here. If this were more than just a little demo application,
+	// we'd want to be way, way more careful and use a proper type designed to handle money.
+
+	quarters := receipt.Total / 0.25
+	if quarters == math.Floor(quarters) {
+		return 25
+	}
 	return 0
 }
 
