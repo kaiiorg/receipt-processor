@@ -162,3 +162,71 @@ func TestCalculator_RuleTotalMultipleOfQuarter(t *testing.T) {
 		require.Equalf(t, c.Expected, result, "Total: %f", c.Receipt.Total)
 	}
 }
+
+func TestCalculator_PointPerTwoItems(t *testing.T) {
+	cases := []testCase{
+		{
+			Receipt: models.Receipt{
+				Items: []models.Item{
+					// 1
+					{},
+				},
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				Items: []models.Item{
+					// 2
+					{}, {},
+				},
+			},
+			Expected: 1,
+		},
+		{
+			Receipt: models.Receipt{
+				Items: []models.Item{
+					// 3
+					{}, {}, {},
+				},
+			},
+			Expected: 1,
+		},
+		{
+			Receipt: models.Receipt{
+				Items: []models.Item{
+					// 4
+					{}, {}, {}, {},
+				},
+			},
+			Expected: 2,
+		},
+		{
+			Receipt: models.Receipt{
+				Items: []models.Item{
+					// 0
+				},
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				Items: []models.Item{
+					// 28
+					{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+				},
+			},
+			Expected: 14,
+		},
+	}
+
+	for _, c := range cases {
+		calc := Calculator{}
+
+		// Act
+		result := calc.rulePointPerTwoItems(c.Receipt)
+
+		// Assert
+		require.Equalf(t, c.Expected, result, "Item count: %d", len(c.Receipt.Items))
+	}
+}

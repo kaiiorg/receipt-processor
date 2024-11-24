@@ -1,8 +1,9 @@
 package points_calculator
 
 import (
-	"github.com/kaiiorg/receipt-processor/internal/models"
 	"math"
+
+	"github.com/kaiiorg/receipt-processor/internal/models"
 )
 
 type Calculator struct{}
@@ -65,7 +66,7 @@ func (c *Calculator) ruleTotalMultipleOfQuarter(receipt models.Receipt) uint64 {
 // rulePointPerTwoItems returns 1 point for every two items
 // Example: 2 items = 1 point, 4 items = 2 points, 3 items = 1 point, 1 item = 0 points
 func (c *Calculator) rulePointPerTwoItems(receipt models.Receipt) uint64 {
-	return 0
+	return uint64(len(receipt.Items) / 2)
 }
 
 // ruleItemDescriptionMultipleOf3 returns a variable number points if the trimmed length of the string is divisible by 3.
