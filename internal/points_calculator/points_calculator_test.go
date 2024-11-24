@@ -2,6 +2,7 @@ package points_calculator
 
 import (
 	"testing"
+	"time"
 
 	"github.com/kaiiorg/receipt-processor/internal/models"
 
@@ -163,7 +164,7 @@ func TestCalculator_RuleTotalMultipleOfQuarter(t *testing.T) {
 	}
 }
 
-func TestCalculator_PointPerTwoItems(t *testing.T) {
+func TestCalculator_RulePointPerTwoItems(t *testing.T) {
 	cases := []testCase{
 		{
 			Receipt: models.Receipt{
@@ -228,5 +229,73 @@ func TestCalculator_PointPerTwoItems(t *testing.T) {
 
 		// Assert
 		require.Equalf(t, c.Expected, result, "Item count: %d", len(c.Receipt.Items))
+	}
+}
+
+func TestCalculator_RuleItemDescriptionMultipleOf3(t *testing.T) {
+	t.Skip("TBD; will come back to this one")
+}
+
+func TestCalculator_RuleOddDay(t *testing.T) {
+	// Arrange
+	cases := []testCase{
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 0, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 1, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 6,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 2, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 3, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 6,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 4, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 29, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 6,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 30, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateStr: time.Date(2024, 24, 31, 0, 0, 0, 0, time.UTC).Format(time.DateOnly),
+			},
+			Expected: 6,
+		},
+	}
+
+	for _, c := range cases {
+		calc := Calculator{}
+
+		// Act
+		result := calc.ruleOddDay(c.Receipt)
+
+		// Assert
+		require.Equalf(t, c.Expected, result, "Date: %s", c.Receipt.PurchaseDateStr)
 	}
 }

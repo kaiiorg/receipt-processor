@@ -78,6 +78,22 @@ func (c *Calculator) ruleItemDescriptionMultipleOf3(receipt models.Receipt) uint
 
 // ruleOddDay returns 6 points if the purchase day in the month is an odd number
 func (c *Calculator) ruleOddDay(receipt models.Receipt) uint64 {
+	date, err := receipt.PurchaseDate()
+	// We're going to assume that this receipt has been validated already, but we'll sanity check the error anyway.
+	// Invalid receipts don't earn you points.
+	if err != nil {
+		return 0
+	}
+
+	// Another sanity check that the day is within range
+	if date.Day() <= 0 || date.Day() > 31 {
+		return 0
+	}
+
+	if date.Day()%2 != 0 {
+		return 6
+	}
+
 	return 0
 }
 
