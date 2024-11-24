@@ -52,3 +52,49 @@ func TestCaculator_RuleRetailerName(t *testing.T) {
 		require.Equal(t, c.Expected, result)
 	}
 }
+
+func TestCalculator_RuleRoundTotal(t *testing.T) {
+	// Arrange
+	cases := []testCase{
+		{
+			Receipt: models.Receipt{
+				Total: 123.0,
+			},
+			Expected: 50,
+		},
+		{
+			Receipt: models.Receipt{
+				Total: 123.32,
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				Total: 5.99,
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				Total: 5.01,
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				Total: 5.0,
+			},
+			Expected: 50,
+		},
+	}
+
+	for _, c := range cases {
+		calc := Calculator{}
+
+		// Act
+		result := calc.ruleRoundTotal(c.Receipt)
+
+		// Assert
+		require.Equalf(t, c.Expected, result, "Total: %f", c.Receipt.Total)
+	}
+}

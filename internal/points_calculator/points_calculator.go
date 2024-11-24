@@ -1,6 +1,9 @@
 package points_calculator
 
-import "github.com/kaiiorg/receipt-processor/internal/models"
+import (
+	"github.com/kaiiorg/receipt-processor/internal/models"
+	"math"
+)
 
 type Calculator struct{}
 
@@ -40,6 +43,9 @@ func (c *Calculator) ruleRetailerName(receipt models.Receipt) uint64 {
 // ruleRoundTotal returns 50 points if the total is a round dollar amount with no cents
 // Example: $7.00 = 50 points, $37.50 = 0 points, $1.23 = 0 points
 func (c *Calculator) ruleRoundTotal(receipt models.Receipt) uint64 {
+	if receipt.Total == math.Floor(receipt.Total) {
+		return 50
+	}
 	return 0
 }
 
