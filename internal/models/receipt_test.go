@@ -40,9 +40,9 @@ func TestReceipt_PurchaseDate_Invalid(t *testing.T) {
 func TestReceipt_PurchaseTimeFormat_Valid(t *testing.T) {
 	// Arrange
 	r := Receipt{
-		PurchaseDateTimeStr: "13:01",
+		PurchaseTimeStr: "13:01",
 	}
-	expected, err := time.Parse("15:04", r.PurchaseDateTimeStr)
+	expected, err := time.Parse("15:04", r.PurchaseTimeStr)
 	require.NoError(t, err)
 
 	// Act
@@ -56,7 +56,7 @@ func TestReceipt_PurchaseTimeFormat_Valid(t *testing.T) {
 func TestReceipt_PurchaseTimeFormat_Invalid(t *testing.T) {
 	// Arrange
 	r := Receipt{
-		PurchaseDateTimeStr: "this is not a valid date",
+		PurchaseTimeStr: "this is not a valid date",
 	}
 
 	// Act

@@ -8,11 +8,11 @@ const (
 )
 
 type Receipt struct {
-	Retailer            string  `json:"retailer"`
-	PurchaseDateStr     string  `json:"purchaseDate"`
-	PurchaseDateTimeStr string  `json:"purchaseDateTime"`
-	Total               float64 `json:"total"`
-	Items               []Item  `json:"items"`
+	Retailer        string  `json:"retailer"`
+	PurchaseDateStr string  `json:"purchaseDate"`
+	PurchaseTimeStr string  `json:"purchaseDateTime"`
+	Total           float64 `json:"total"`
+	Items           []Item  `json:"items"`
 }
 
 func (r *Receipt) PurchaseDate() (time.Time, error) {
@@ -20,5 +20,5 @@ func (r *Receipt) PurchaseDate() (time.Time, error) {
 }
 
 func (r *Receipt) PurchaseTime() (time.Time, error) {
-	return time.Parse(PurchaseTimeFormat, r.PurchaseDateTimeStr)
+	return time.Parse(PurchaseTimeFormat, r.PurchaseTimeStr)
 }
