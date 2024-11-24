@@ -299,3 +299,55 @@ func TestCalculator_RuleOddDay(t *testing.T) {
 		require.Equalf(t, c.Expected, result, "Date: %s", c.Receipt.PurchaseDateStr)
 	}
 }
+
+func TestCalculator_RuleBetweenTimes(t *testing.T) {
+	// Arrange
+	cases := []testCase{
+		{
+			Receipt: models.Receipt{
+				PurchaseDateTimeStr: time.Date(0, 0, 0, 14, 1, 0, 0, time.UTC).Format("15:04"),
+			},
+			Expected: 10,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateTimeStr: time.Date(0, 0, 0, 14, 0, 0, 0, time.UTC).Format("15:04"),
+			},
+			Expected: 0,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateTimeStr: time.Date(0, 0, 0, 15, 0, 0, 0, time.UTC).Format("15:04"),
+			},
+			Expected: 10,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateTimeStr: time.Date(0, 0, 0, 15, 30, 0, 0, time.UTC).Format("15:04"),
+			},
+			Expected: 10,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateTimeStr: time.Date(0, 0, 0, 15, 59, 0, 0, time.UTC).Format("15:04"),
+			},
+			Expected: 10,
+		},
+		{
+			Receipt: models.Receipt{
+				PurchaseDateTimeStr: time.Date(0, 0, 0, 16, 0, 0, 0, time.UTC).Format("15:04"),
+			},
+			Expected: 0,
+		},
+	}
+
+	for _, c := range cases {
+		calc := Calculator{}
+
+		// Act
+		result := calc.ruleBetweenTimes(c.Receipt)
+
+		// Assert
+		require.Equalf(t, c.Expected, result, "Time: %s", c.Receipt.PurchaseDateTimeStr)
+	}
+}

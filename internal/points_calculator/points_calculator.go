@@ -2,6 +2,7 @@ package points_calculator
 
 import (
 	"math"
+	"time"
 
 	"github.com/kaiiorg/receipt-processor/internal/models"
 )
@@ -99,5 +100,19 @@ func (c *Calculator) ruleOddDay(receipt models.Receipt) uint64 {
 
 // ruleBetweenTimes returns 10 points if the time of purchase is between 2:00PM and 4:00PM noninclusive
 func (c *Calculator) ruleBetweenTimes(receipt models.Receipt) uint64 {
+	purchaseTime, err := receipt.PurchaseTime()
+	// We're going to assume that this receipt has been validated already, but we'll sanity check the error anyway.
+	// Invalid receipts don't earn you points.
+	if err != nil {
+		return 0
+	}
+
+	min := time.Date(0, 1, 1, 14, 0, 0, 0, time.UTC)
+	max := time.Date(0, 1, 1, 16, 0, 0, 0, time.UTC)
+
+	if purchaseTime.After(min) && purchaseTime.Before(max) {
+		return 10
+	}
+
 	return 0
 }
