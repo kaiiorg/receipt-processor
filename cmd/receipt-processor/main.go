@@ -7,6 +7,7 @@ import (
 	"os/signal"
 
 	"github.com/kaiiorg/receipt-processor/internal/api"
+	"github.com/kaiiorg/receipt-processor/internal/repository/memory_repository"
 )
 
 var (
@@ -20,7 +21,7 @@ func main() {
 }
 
 func run() {
-	a := api.New()
+	a := api.New(memory_repository.NewMemoryRepository())
 	err := a.Run(fmt.Sprintf("0.0.0.0:%d", *port))
 	if err != nil {
 		panic(err)

@@ -1,8 +1,9 @@
 package api
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
+	"os"
 
 	"github.com/kaiiorg/receipt-processor/internal/models"
 
@@ -28,6 +29,11 @@ func (api *Api) processReceipt(c *gin.Context) {
 
 	// Persist
 	id := uuid.NewString()
+	err = api.repo.SaveReceipt(id, r)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	// Respond
 	c.JSON(200, gin.H{"id": id})
@@ -41,10 +47,23 @@ func (api *Api) points(c *gin.Context) {
 	}
 
 	// Pull persisted receipt
-	fmt.Sprintf("id: %s", id) // NOOP for now
+	r, err := api.repo.LoadReceipt(id)
+	if errors.Is(err, os.ErrNotExist) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if r == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "saved receipt was nil!"})
+		return
+	}
 
 	// Calculate the points
+	points := api.calculator.Calculate(*r)
 
 	// Return the result
-	c.JSON(200, gin.H{"points": 0})
+	c.JSON(200, gin.H{"points": points})
 }

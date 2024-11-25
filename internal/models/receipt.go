@@ -49,6 +49,11 @@ func (r *Receipt) Validate() error {
 		actualTotal += price
 	}
 
+	// Round to 2 decimal points. If this were a real application, we'd use a proper money type. This is just
+	// so we can ignore floating point rounding errors.
+	actualTotal = float64(int(actualTotal*100)) / 100
+	expectedTotal = float64(int(expectedTotal*100)) / 100
+
 	if actualTotal != expectedTotal {
 		return ErrItemsDoNotAddUpToTotal
 	}
