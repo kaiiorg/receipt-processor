@@ -19,26 +19,26 @@ func TestCalculator_Calculate(t *testing.T) {
 				Items: []models.Item{
 					{
 						ShortDescription: "Mountain Dew 12PK",
-						Price:            6.49,
+						PriceStr:         "6.49",
 					},
 					{
 						ShortDescription: "Emils Cheese Pizza",
-						Price:            12.25,
+						PriceStr:         "12.25",
 					},
 					{
 						ShortDescription: "Knorr Creamy Chicken",
-						Price:            1.26,
+						PriceStr:         "1.26",
 					},
 					{
 						ShortDescription: "Doritos Nacho Cheese",
-						Price:            3.35,
+						PriceStr:         "3.35",
 					},
 					{
 						ShortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
-						Price:            12.00,
+						PriceStr:         "12.00",
 					},
 				},
-				Total: 35.35,
+				TotalStr: "35.35",
 			},
 			Expected: 28,
 		},
@@ -50,22 +50,22 @@ func TestCalculator_Calculate(t *testing.T) {
 				Items: []models.Item{
 					{
 						ShortDescription: "Gatorade",
-						Price:            2.25,
+						PriceStr:         "2.25",
 					},
 					{
 						ShortDescription: "Gatorade",
-						Price:            2.25,
+						PriceStr:         "2.25",
 					},
 					{
 						ShortDescription: "Gatorade",
-						Price:            2.25,
+						PriceStr:         "2.25",
 					},
 					{
 						ShortDescription: "Gatorade",
-						Price:            2.25,
+						PriceStr:         "2.25",
 					},
 				},
-				Total: 9.00,
+				TotalStr: "9.00",
 			},
 			Expected: 109,
 		},

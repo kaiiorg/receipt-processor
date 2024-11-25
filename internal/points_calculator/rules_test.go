@@ -59,31 +59,31 @@ func TestCalculator_RuleRoundTotal(t *testing.T) {
 	cases := []testCase{
 		{
 			Receipt: models.Receipt{
-				Total: 123.0,
+				TotalStr: "123.0",
 			},
 			Expected: 50,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 123.32,
+				TotalStr: "123.32",
 			},
 			Expected: 0,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.99,
+				TotalStr: "5.99",
 			},
 			Expected: 0,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.01,
+				TotalStr: "5.01",
 			},
 			Expected: 0,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.0,
+				TotalStr: "5.0",
 			},
 			Expected: 50,
 		},
@@ -105,49 +105,49 @@ func TestCalculator_RuleTotalMultipleOfQuarter(t *testing.T) {
 	cases := []testCase{
 		{
 			Receipt: models.Receipt{
-				Total: 123.0,
+				TotalStr: "123.0",
 			},
 			Expected: 25,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 123.32,
+				TotalStr: "123.32",
 			},
 			Expected: 0,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.99,
+				TotalStr: "5.99",
 			},
 			Expected: 0,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.01,
+				TotalStr: "5.01",
 			},
 			Expected: 0,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.0,
+				TotalStr: "5.0",
 			},
 			Expected: 25,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.25,
+				TotalStr: "5.25",
 			},
 			Expected: 25,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.50,
+				TotalStr: "5.50",
 			},
 			Expected: 25,
 		},
 		{
 			Receipt: models.Receipt{
-				Total: 5.75,
+				TotalStr: "5.75",
 			},
 			Expected: 25,
 		},
@@ -160,7 +160,7 @@ func TestCalculator_RuleTotalMultipleOfQuarter(t *testing.T) {
 		result := calc.ruleTotalMultipleOfQuarter(c.Receipt)
 
 		// Assert
-		require.Equalf(t, c.Expected, result, "Total: %f", c.Receipt.Total)
+		require.Equalf(t, c.Expected, result, "Total: %s", c.Receipt.TotalStr)
 	}
 }
 
@@ -241,7 +241,7 @@ func TestCalculator_RuleItemDescriptionMultipleOf3(t *testing.T) {
 				Items: []models.Item{
 					{
 						ShortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
-						Price:            12.00,
+						PriceStr:         "12.00",
 					},
 				},
 			},
@@ -253,7 +253,7 @@ func TestCalculator_RuleItemDescriptionMultipleOf3(t *testing.T) {
 				Items: []models.Item{
 					{
 						ShortDescription: "Diet Dr. Pepper 2 Liters",
-						Price:            2.35,
+						PriceStr:         "2.35",
 					},
 				},
 			},
@@ -265,7 +265,7 @@ func TestCalculator_RuleItemDescriptionMultipleOf3(t *testing.T) {
 				Items: []models.Item{
 					{
 						ShortDescription: "Dr. Pepper 2 Liters",
-						Price:            2.35,
+						PriceStr:         "2.35",
 					},
 				},
 			},
@@ -277,15 +277,15 @@ func TestCalculator_RuleItemDescriptionMultipleOf3(t *testing.T) {
 				Items: []models.Item{
 					{
 						ShortDescription: "Diet Dr. Pepper 2 Liters",
-						Price:            2.35,
+						PriceStr:         "2.35",
 					},
 					{
 						ShortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
-						Price:            12.00,
+						PriceStr:         "12.00",
 					},
 					{
 						ShortDescription: "Dr. Pepper 2 Liters",
-						Price:            2.35,
+						PriceStr:         "2.35",
 					},
 				},
 			},

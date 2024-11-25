@@ -32,7 +32,14 @@ func (c *Calculator) ruleRetailerName(receipt models.Receipt) uint64 {
 // ruleRoundTotal returns 50 points if the total is a round dollar amount with no cents
 // Example: $7.00 = 50 points, $37.50 = 0 points, $1.23 = 0 points
 func (c *Calculator) ruleRoundTotal(receipt models.Receipt) uint64 {
-	if receipt.Total == math.Floor(receipt.Total) {
+	// We're expecting that the total value has already been validated. If this were more than a little demo app,
+	// we'd want to put more effort into preventing any errors here.
+	total, err := receipt.Total()
+	if err != nil {
+		return 0
+	}
+
+	if total == math.Floor(total) {
 		return 50
 	}
 	return 0
@@ -43,8 +50,13 @@ func (c *Calculator) ruleRoundTotal(receipt models.Receipt) uint64 {
 func (c *Calculator) ruleTotalMultipleOfQuarter(receipt models.Receipt) uint64 {
 	// Note: carefully ignoring floating point rounding issues here. If this were more than just a little demo application,
 	// we'd want to be way, way more careful and use a proper type designed to handle money.
+	// We're also assuming these have already been validated
+	total, err := receipt.Total()
+	if err != nil {
+		return 0
+	}
 
-	quarters := receipt.Total / 0.25
+	quarters := total / 0.25
 	if quarters == math.Floor(quarters) {
 		return 25
 	}
@@ -69,7 +81,13 @@ func (c *Calculator) ruleItemDescriptionMultipleOf3(receipt models.Receipt) uint
 			continue
 		}
 
-		initialPoints := item.Price * 0.2
+		// We're again assuming that the value has already been validated
+		price, err := item.Price()
+		if err != nil {
+			continue
+		}
+
+		initialPoints := price * 0.2
 
 		// math.Trunc returns the integer portion of the float: 2.4 -> 2; 2 -> 2
 		intPoints := math.Trunc(initialPoints)

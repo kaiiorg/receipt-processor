@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -56,7 +57,7 @@ func TestReceipt_PurchaseTimeFormat_Valid(t *testing.T) {
 func TestReceipt_PurchaseTimeFormat_Invalid(t *testing.T) {
 	// Arrange
 	r := Receipt{
-		PurchaseTimeStr: "this is not a valid date",
+		PurchaseTimeStr: "this is not a valid time",
 	}
 
 	// Act
@@ -65,4 +66,33 @@ func TestReceipt_PurchaseTimeFormat_Invalid(t *testing.T) {
 	// Assert
 	require.ErrorContains(t, err, "cannot parse")
 	require.True(t, result.IsZero())
+}
+
+func TestReceipt_Total_Valid(t *testing.T) {
+	// Arrange
+	r := Receipt{
+		TotalStr: "1.25",
+	}
+	expected := 1.25
+
+	// Act
+	result, err := r.Total()
+
+	// Assert
+	require.NoError(t, err)
+	require.Equal(t, expected, result)
+}
+
+func TestReceipt_Total_Invalid(t *testing.T) {
+	// Arrange
+	r := Receipt{
+		TotalStr: "this is not a valid total",
+	}
+
+	// Act
+	result, err := r.Total()
+
+	// Assert
+	require.ErrorIs(t, err, strconv.ErrSyntax)
+	require.Zero(t, result)
 }
